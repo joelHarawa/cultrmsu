@@ -7,6 +7,7 @@ import { useContext, useState } from "react";
 import styled from "styled-components";
 import { AuthContext } from "../context/AuthContext";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 // Styled components
 const Container = styled.div`
@@ -155,8 +156,9 @@ const Button = styled.button`
 `;
 
 const AddPost = () => {
+    const navigate = useNavigate();
     const apiUrl = 'https://18.219.147.241';
-    const {user} = useContext(AuthContext);
+    const {admin} = useContext(AuthContext);
     const [inputs, setInputs] = useState({
         title: "",
         body: ""
@@ -188,11 +190,12 @@ const AddPost = () => {
             article.append("photo", background);
             article.append("title", inputs.title);
             article.append("body", inputs.body);
-            article.append("author", user.email);
+            article.append("author", admin.email);
             const response = await axios.post(`${apiUrl}/api/post/addPost`, article, {
                 headers: {"Content-Type" : "multipart/form-data"},
             });
             console.log("Article successfully submitted:", response.data);
+            navigate("/blog/allposts");
         } catch (error) {
             console.error(error, "Error submitting article");
         }
@@ -216,9 +219,9 @@ const AddPost = () => {
             <Head>
                 <Author>
                     <Profile>
-                        <ProfileImage src={user.profilePicture}/>
+                        <ProfileImage src={admin.profilePicture}/>
                     </Profile>
-                    <AuthorName>{user.firstName} {user.lastName}</AuthorName>
+                    <AuthorName>{admin.firstName} {admin.lastName}</AuthorName>
                 </Author>
             </Head>
             <Content>

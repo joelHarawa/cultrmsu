@@ -6,6 +6,7 @@ Purpose: Create context to handle user state for admin and regular users
 
 import {createContext, useEffect, useState} from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 export const AuthContext = createContext();
 
 // Define Authentication Context Provider
@@ -30,7 +31,7 @@ export const AuthContextProvider = ({children}) => {
         }
     }
 
-    // Get regular admin profile data from backend
+    // Get admin profile data from backend
     const getAdminProfile = async () => {
         try {
             const apiUrl = 'https://18.219.147.241';
@@ -57,8 +58,9 @@ export const AuthContextProvider = ({children}) => {
     }
 
     // Logout the current user
-    const logout = async (inputs) => {
+    const logout = async () => {
         setUser(null);
+        window.localStorage.clear();
     }
     // Send inputs from user registration page to backend
     const adminSignup = async (inputs) => {
@@ -73,8 +75,9 @@ export const AuthContextProvider = ({children}) => {
     }
 
     // Logout the current user
-    const adminLogout = async (inputs) => {
+    const adminLogout = async () => {
         setAdmin(null);
+        window.localStorage.clear();
     }
 
     return (

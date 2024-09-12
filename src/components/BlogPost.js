@@ -8,6 +8,140 @@ import {
  } from "react-icons/fa";
 import { AuthContext } from "../context/AuthContext";
 
+export const formatTime = (timestamp) => {
+    const now = new Date();
+    const postDate = new Date(timestamp);
+    const diffInMs = now - postDate;
+    const diffInMinutes = Math.floor(diffInMs / 60000);
+    const diffInHours = Math.floor(diffInMs / 3600000);
+    if (diffInMinutes < 60) {
+        return `${diffInMinutes} minutes ago`;
+    } else if (diffInHours < 24) {
+        return `${diffInHours} hours ago`;
+    } else {
+        return postDate.toLocaleDateString();
+    }
+}
+
+
+const BlogPost = () => {
+    const { admin } = useContext(AuthContext);
+    const navigate = useNavigate();
+    /* Need to make functions to get the current post and functions to
+       get the next post 
+    */
+    const apiUrl = 'https://18.219.147.241';
+    const { id } = useParams();
+    const [index, setIndex] = useState(id);
+    const [posts, setPosts] = useState([]);
+    const [isFavorite, setIsFavorite] = useState(false);
+    useEffect(()=> {
+        const getPosts = async () => {
+            try {
+            const response = await axios.get(`${apiUrl}/api/get/getPost`);
+            console.log(response);
+            setPosts(response.data);
+            } catch (error) {
+                console.error(error);
+            } 
+        }
+        getPosts();
+    }, []);
+
+    const allPosts = () => {
+        navigate("/blog/allposts")
+    }
+
+    const nextPost = () => {
+        setIndex(prevIndex => {
+            const newIndex = (prevIndex + 1) % posts.length; // Wrap around to 0 if at the end
+            navigate(`/blog/${newIndex}`);
+            return newIndex;
+        });
+    }
+
+    const lastPost = () => {
+        setIndex(prevIndex => {
+            const newIndex = (prevIndex - 1 + posts.length) % posts.length; // Wrap around to last post if at the beginning
+            navigate(`/blog/${newIndex}`);
+            return newIndex;
+        });
+    }
+
+    const formatText = (text) => {
+        return text.replace(/\r\n/g, '<br/>');
+    };
+
+    const addToFavorites = async () => {
+        setIsFavorite(prevState => !prevState);
+        if (isFavorite && user) {
+            try {
+                const response = await axios.post(`${apiUrl}/api/post/addFavorite`, {user: admin.email, post: posts[index]});
+                console.log(response);
+            } catch (error) {
+                console.error("Couldn't set favorite", error);
+            }
+        } else if (isFavorite && !user) {
+            navigate("/login");
+        }
+    }
+    
+
+    if (posts.length) {
+        console.log(posts[index]);
+        return (
+            <>
+            <ButtonContainer>
+                    <Buttons>
+                        <Arrow onClick={lastPost}>
+                            <FaChevronLeft/>
+                        </Arrow>
+                        <Arrow onClick={nextPost}>
+                            <FaChevronRight/>
+                        </Arrow>
+                    </Buttons>
+            </ButtonContainer>
+            <Left/>
+            <Container>
+                <Cover>
+                    <CoverImage src={posts[id].photoUrl}/>
+                </Cover>
+                <Head>
+                    <Title>{posts[id].title}</Title>
+                </Head>
+                <Head>
+                    <Author>
+                        <Profile>
+                            <ProfileImage src={posts[id].profilePicture}/>
+                        </Profile>
+                        <AuthorName>{posts[id].firstName} {posts[id].lastName}</AuthorName>
+                    </Author>
+                    <Time>
+                        <TimeText>{formatTime(posts[id].createdAt)}</TimeText>
+                    </Time>
+                </Head>
+                <Content>
+                    <Text dangerouslySetInnerHTML={{ __html: formatText(posts[id].body)}}/>
+                </Content>
+            </Container>
+            <Right>
+                    <Actions>
+                        <Button onClick={allPosts}>
+                            <FaNewspaper/>
+                            &nbsp;
+                            All Posts
+                        </Button>
+                        <Favorite isfavorite={isFavorite} onClick={addToFavorites}>
+                            <FaStar/>
+                            &nbsp;
+                            Favorite
+                        </Favorite>
+                    </Actions>
+                </Right>
+            </>
+        )
+    }
+}
 
 // Styled components
 const Container = styled.div`
@@ -178,156 +312,5 @@ const Favorite = styled.button`
         cursor: pointer;
     }
 `;
-
-export const formatTime = (timestamp) => {
-    const now = new Date();
-    const postDate = new Date(timestamp);
-    const diffInMs = now - postDate;
-    const diffInMinutes = Math.floor(diffInMs / 60000);
-    const diffInHours = Math.floor(diffInMs / 3600000);
-    const diffInDays = Math.floor(diffInMs / 86400000);
-
-    if (diffInMinutes < 60) {
-        return `${diffInMinutes} minutes ago`;
-    } else if (diffInHours < 24) {
-        return `${diffInHours} hours ago`;
-    } else {
-        return postDate.toLocaleDateString();
-    }
-}
-
-
-const BlogPost = () => {
-    const { user } = useContext(AuthContext);
-    const navigate = useNavigate();
-    /* Need to make functions to get the current post and functions to
-       get the next post 
-    */
-    const apiUrl = 'https://18.219.147.241';
-    const { id } = useParams();
-    const [index, setIndex] = useState(id);
-    const [posts, setPosts] = useState([]);
-    const [isFavorite, setIsFavorite] = useState(false);
-    useEffect(()=> {
-        const getPosts = async () => {
-            try {
-            const response = await axios.get(`${apiUrl}/api/get/getPost`);
-            console.log(response);
-            setPosts(response.data);
-            } catch (error) {
-                console.error(error);
-            } 
-        }
-        getPosts();
-    }, []);
-    const addPost = () => {
-        if (!user) {
-            navigate("/login");
-        } else {
-            navigate("/blog/addpost")
-        }
-    }
-
-    const allPosts = () => {
-        navigate("/blog/allposts")
-    }
-
-    const nextPost = () => {
-        setIndex(prevIndex => {
-            const newIndex = (prevIndex + 1) % posts.length; // Wrap around to 0 if at the end
-            navigate(`/blog/${newIndex}`);
-            return newIndex;
-        });
-    }
-
-    const lastPost = () => {
-        setIndex(prevIndex => {
-            const newIndex = (prevIndex - 1 + posts.length) % posts.length; // Wrap around to last post if at the beginning
-            navigate(`/blog/${newIndex}`);
-            return newIndex;
-        });
-    }
-
-    const formatText = (text) => {
-        return text.replace(/\r\n/g, '<br/>');
-    };
-
-    const addToFavorites = async () => {
-        setIsFavorite(prevState => !prevState);
-        if (isFavorite && user) {
-            try {
-                const response = await axios.post(`${apiUrl}/api/post/addFavorite`, {user: user.email, post: posts[index]});
-                console.log(response);
-            } catch (error) {
-                console.error("Couldn't set favorite", error);
-            }
-        } else if (isFavorite && !user) {
-            navigate("/login");
-        }
-    }
-    
-
-    if (posts.length) {
-        console.log(posts[index]);
-        return (
-            <>
-            <ButtonContainer>
-                    <Buttons>
-                        <Arrow onClick={lastPost}>
-                            <FaChevronLeft/>
-                        </Arrow>
-                        <Arrow onClick={nextPost}>
-                            <FaChevronRight/>
-                        </Arrow>
-                    </Buttons>
-            </ButtonContainer>
-            <Left/>
-            <Container>
-                <Cover>
-                    <CoverImage src={posts[id].photoUrl}/>
-                </Cover>
-                <Head>
-                    <Title>{posts[id].title}</Title>
-                </Head>
-                <Head>
-                    <Author>
-                        <Profile>
-                            <ProfileImage src={posts[id].profilePicture}/>
-                        </Profile>
-                        <AuthorName>{posts[id].firstName} {posts[id].lastName}</AuthorName>
-                    </Author>
-                    <Time>
-                        <TimeText>{formatTime(posts[id].createdAt)}</TimeText>
-                    </Time>
-                </Head>
-                <Content>
-                    <Text dangerouslySetInnerHTML={{ __html: formatText(posts[id].body)}}/>
-                </Content>
-            </Container>
-            <Right>
-                    <Actions>
-                        <Button onClick={addPost}>
-                            <FaPlus/>
-                            &nbsp;
-                            Add Post
-                        </Button>
-                        <Button onClick={allPosts}>
-                            <FaNewspaper/>
-                            &nbsp;
-                            All Posts
-                        </Button>
-                    </Actions>
-                    <Actions>
-                        <Favorite isfavorite={isFavorite} onClick={addToFavorites}>
-                            <FaStar/>
-                            &nbsp;
-                            Favorite
-                        </Favorite>
-                    </Actions>
-                </Right>
-            </>
-        )
-    }
-}
 
 export default BlogPost;

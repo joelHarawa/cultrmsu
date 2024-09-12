@@ -11,7 +11,7 @@ const AboutAdmin = () => {
     useEffect(() => {
         console.log(admin)
         if (!admin) {
-            navigate("/adminLogin");
+            navigate("/admin/login");
         }
     });
 

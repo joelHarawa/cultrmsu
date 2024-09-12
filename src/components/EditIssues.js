@@ -35,6 +35,13 @@ const Issue = styled.input`
     font-weight: 600;
 `;
 
+const PdfURL = styled.input`
+    font-size: 18px;
+    font-family: 'DM Sans', serif;
+    width: 42vw;
+    margin-top: 10px;
+`;
+
 const IssueContent = styled.div`
     display: flex;
     flex-direction: column;
@@ -57,6 +64,7 @@ const PdfContainer = styled.div`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    
 `;
 
 const Metadata = styled.input`
@@ -139,29 +147,13 @@ const Submit = styled.div`
 
 const EditIssues = () => {
     const navigate = useNavigate();
-    const [pdfName, setPdfName] = useState("");
     const apiUrl = 'https://18.219.147.241';
-    const [issues, setIssues] = useState([]);
     const [photo, setPhoto] = useState("");
-    const [pdf, setPdf] = useState("");
     const [inputs, setInputs ] = useState({
         edition: "",
-        title: ""
-    })
-
-    useEffect(() => {
-        const getPosts = async() => {
-            try {
-                console.log("get that post")
-                const response = await axios.get(`${apiUrl}/api/post/getIssue`);
-                console.log(response.data);
-                setIssues(response.data);
-            } catch (error) {
-                console.log(error, "This failed");
-            }
-        }
-        getPosts();
-    }, []);
+        title: "",
+        pdfUrl: "",
+    });
 
     const handleChange = (e) => {
         setInputs(prev=>({...prev, [e.target.name]: e.target.value}));
@@ -173,7 +165,7 @@ const EditIssues = () => {
             article.append("photo", photo);
             article.append("edition", inputs.edition);
             article.append("title", inputs.title);
-            article.append("pdf", pdf);
+            article.append("pdfUrl", inputs.pdfUrl);
             const response = await axios.post(`${apiUrl}/api/post/addIssue`, article, {
                 headers: {"Content-Type" : "multipart/form-data"},
             });
@@ -196,34 +188,22 @@ const EditIssues = () => {
         }
     }
 
-    const handlePdfUpload = (e) => {
-        const file = e.target.files[0];
-        setPdf(file);
-        setPdfName(file.name);
-        console.log("selected pdf", file);
-    };
-
     return (
         <>
             <Container>
-            <IssuesBar>
-                <Wrapper>
-                    <Issue name="editon" placeholder="Issue Edition..." onChange={handleChange}/>
-                </Wrapper>
-            </IssuesBar>
-            <IssueContent>
-                <CoverContainer>
-                    <ImagePreview id="imagePreview" src={photo ? URL.createObjectURL(photo) : ""}/>
-                    <PhotoLabel htmlFor="photoInput">Upload Photo</PhotoLabel>
-                    <Photo type="file" id="photoInput" accept="image/*" onChange={handleUpload}/>
-                </CoverContainer>
-                <Metadata name="title" placeholder="Issue Title..." onChange={handleChange}/>
-                <PdfContainer>
-                    <PdfLabel htmlFor="pdfInput">Upload PDF {pdfName ? 
-                    pdfName : 
-                    ""}</PdfLabel>
-                    <Pdf type="file" id="pdfInput" accept="application/pdf" onChange={handlePdfUpload}/>
-                </PdfContainer>
+                <IssuesBar>
+                    <Wrapper>
+                        <Issue name="editon" placeholder="Issue Edition..." onChange={handleChange}/>
+                    </Wrapper>
+                </IssuesBar>
+                <IssueContent>
+                    <CoverContainer>
+                        <ImagePreview id="imagePreview" src={photo ? URL.createObjectURL(photo) : ""}/>
+                        <PhotoLabel htmlFor="photoInput">Upload Photo</PhotoLabel>
+                        <Photo type="file" id="photoInput" accept="image/*" onChange={handleUpload}/>
+                    </CoverContainer>
+                    <Metadata name="title" placeholder="Issue Title..." onChange={handleChange}/>
+                    <PdfURL name="pdfUrl" placeholder="Flipbook URL..." onChange={handleChange}/>
             </IssueContent>
             <Submit>
                 <Button onClick={handleSubmit}>Submit</Button>

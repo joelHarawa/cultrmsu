@@ -2,13 +2,12 @@ import React from "react";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Issues from "./pages/Issues";
-import Admin from "./pages/Admin";
+import AdminHome from "./pages/AdminHome";
 import Blog from "./pages/Blog";
 import Login from "./pages/Login";
 import {createHashRouter, RouterProvider, Route} from "react-router-dom";
 import AboutAdmin from "./pages/AboutAdmin";
 import IssuesAdmin from "./pages/IssuesAdmin";
-import BlogAdmin from "./pages/BlogAdmin";
 import SignUp from "./pages/SignUp";
 import Profile from "./pages/Profile";
 import LoginAdmin from "./pages/LoginAdmin";
@@ -17,6 +16,8 @@ import AddBlogPost from "./pages/AddBlogPost";
 import AllBlogPosts from "./pages/AllBlogPosts";
 import EditLogin from "./pages/EditLogin";
 import EditSignUp from "./pages/EditSignUp";
+import ProfileAdmin from "./pages/ProfileAdmin";
+import HomeAdmin from "./pages/HomeAdmin";
 
 const router = createHashRouter([
     {
@@ -36,7 +37,7 @@ const router = createHashRouter([
         element: <Blog/>
     },
     {
-        path:"/blog/addpost",
+        path:"/admin/blog",
         element: <AddBlogPost/>
     },
     {
@@ -45,7 +46,11 @@ const router = createHashRouter([
     },
     {
         path:"/admin",
-        element: <Admin/>
+        element: <HomeAdmin/>
+    },
+    {
+        path:"/admin/home",
+        element: <AdminHome/>
     },
     {
         path:"/login",
@@ -56,7 +61,7 @@ const router = createHashRouter([
         element: <SignUp/>
     },
     {
-        path:"/admin/login",
+        path:"/admin/login/edit",
         element: <EditLogin/>
     },
     {
@@ -64,15 +69,11 @@ const router = createHashRouter([
         element: <Profile/>
     },
     {
-        path: "/admin/signup",
+        path: "/admin/signup/edit",
         element: <EditSignUp/>
     },
     {
-        path: "/admin",
-        element: <SignUp/>
-    },
-    {
-        path:"/adminLogin",
+        path:"/admin/login",
         element: <LoginAdmin/>
     },
     {
@@ -88,9 +89,9 @@ const router = createHashRouter([
         element: <IssuesAdmin/>
     },
     {
-        path:"/admin/blog",
-        element: <BlogAdmin/>
-    },
+        path:"/admin/profile",
+        element: <ProfileAdmin/>
+    }
 ]);
 const App = () => {
     return <RouterProvider router={router}/>;

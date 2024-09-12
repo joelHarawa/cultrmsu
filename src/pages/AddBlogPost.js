@@ -1,9 +1,9 @@
 import React, { useContext, useEffect } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import Navbar from "../components/Navbar";
 import AddPost from "../components/AddPost";
 import styled from "styled-components";
+import AdminNavbar from "../components/AdminNavbar";
 
 const Container = styled.div`
     display: flex;
@@ -13,16 +13,17 @@ const Container = styled.div`
 `;
 
 const AddBlogPost = () => {
-    const {user} = useContext(AuthContext);
+    const {admin, getAdminProfile} = useContext(AuthContext);
     const navigate = useNavigate();
     useEffect (() => {
-        if (!user) {
-            navigate("/login");
+        getAdminProfile();
+        if (!admin) {
+            navigate("/admin/login");
         }
     })
     return (
         <>
-        <Navbar/>
+        <AdminNavbar/>
         <Container>
             <AddPost/>
         </Container>

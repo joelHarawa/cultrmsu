@@ -11,6 +11,92 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { AuthContext } from "../context/AuthContext";
 
+const Profile = () => {
+    const apiUrl = 'https://18.219.147.241';
+    const {user, getProfile} = useContext(AuthContext);
+    const navigate = useNavigate();
+    const [profilePicture, setProfilePicture] = useState("");
+    const [favorites, setFavorites] = useState([]);
+    const [changing, setChanging] = useState(false);
+    useEffect(() => {
+        getProfile();
+        console.log(user)
+        if (!user) {
+            navigate("/login");
+        }
+        setProfilePicture(user.profilePicture);
+    }, [user, navigate, getProfile]);
+    
+
+    // function to change the user's profile picture
+    const changePicture = (e) => {
+        setChanging(true);
+        setProfilePicture(e.target.files[0]);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+            document.getElementById("photoPreview").src = reader.result;
+            console.log("selected photo");
+        }
+        if (profilePicture) {
+            reader.readAsDataURL(profilePicture);
+        }
+    }
+
+    useEffect(()=> {
+        const getFavorites = async () => {
+            try {
+                const response = await axios.post(`${apiUrl}/api/get/favorites`, {email: user.email});
+                console.log("here are your faves: ", response);
+                setFavorites(response.data);
+            } catch (error) {
+                console.error(error);
+            } 
+        }
+        getFavorites();
+    }, [])
+
+    const handlePostClick = (index) => {
+        navigate(`/blog/${index}`);
+    }
+    console.log(favorites);
+
+    return (
+        <>
+            <Navbar/>
+            <Containter>
+                <ImageContainer>
+                    <ProfileImage id="photoPreview" src={profilePicture}/>               
+                </ImageContainer>
+                {changing ? <Button onClick={changePicture}>Upload Profile Picture</Button> : "" }
+                <Head>
+                    <Header>{user.firstName + " " + user.lastName}</Header>
+                    <Email>{user.email}</Email>
+                </Head>
+                <Posts>
+                    <Headers>
+                        <Header>My Favorites</Header>
+                    </Headers>
+                    <Section>
+                        {favorites.map((post, index) => (
+                        <Post key={post.post._id} onClick={() => handlePostClick(post.index)}>
+                            <PostImageContainer>
+                                <PostImage src={post.post.photoUrl}/>
+                            </PostImageContainer>
+                            <PostData>
+                                <PostTitle>{post.post.title}</PostTitle>
+                                <PostAuthor>{post.post.author}</PostAuthor>
+                            </PostData>
+                        </Post>
+                        ))}
+                    </Section>
+                </Posts>
+            </Containter>
+        </>
+    )
+}
+
+export default Profile;
+
 // Styled Components
 const Containter = styled.div`
     display: flex;
@@ -55,7 +141,7 @@ const Headers = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: 60%;
+    width: 100%;
 `;
 
 const Header = styled.h3`
@@ -152,114 +238,6 @@ const Button = styled.button`
     }
 `;
 
-const Profile = () => {
-    const apiUrl = 'https://18.219.147.241';
-    const {user, getProfile} = useContext(AuthContext);
-    const navigate = useNavigate();
-    const [profilePicture, setProfilePicture] = useState("");
-    const [favorites, setFavorites] = useState([]);
-    const [myPosts, setMyPosts] = useState([]);
-    const [changing, setChanging] = useState(false);
-    useEffect(() => {
-        getProfile();
-        console.log(user)
-        if (!user) {
-            navigate("/login");
-        }
-    }, [user, navigate, getProfile]);
-    setProfilePicture(user.profilePicture);
-
-    // function to change the user's profile picture
-    const changePicture = (e) => {
-        setChanging(true);
-        setProfilePicture(e.target.files[0]);
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            document.getElementById("photoPreview").src = reader.result;
-            console.log("selected photo");
-        }
-        if (profilePicture) {
-            reader.readAsDataURL(profilePicture);
-        }
-    }
-
-    useEffect(()=> {
-        const getMyPosts = async () => {
-            try {
-                const response = await axios.post(`${apiUrl}/api/get/getMyPost`, {email: user.email});
-                console.log(response);
-                setMyPosts(response.data);
-            } catch (error) {
-                console.error(error);
-            } 
-        }
-        const getFavorites = async () => {
-            try {
-                const response = await axios.post(`${apiUrl}/api/get/favorites`, {email: user.email});
-                console.log("here are your faves: ", response);
-                setFavorites(response.data);
-            } catch (error) {
-                console.error(error);
-            } 
-        }
-        getMyPosts();
-        getFavorites();
-    }, [])
-
-    const handlePostClick = (index) => {
-        navigate(`/blog/${index}`);
-    }
-    console.log(myPosts, favorites);
-
-    return (
-        <>
-            <Navbar/>
-            <Containter>
-                <ImageContainer>
-                    <ProfileImage id="photoPreview" src={profilePicture}/>               
-                </ImageContainer>
-                {changing ? <Button onClick={changePicture}>Upload Profile Picture</Button> : "" }
-                <Head>
-                    <Header>{user.firstName + " " + user.lastName}</Header>
-                    <Email>{user.email}</Email>
-                </Head>
-                <Posts>
-                    <Headers>
-                        <Header>My Posts</Header>
-                        <Header>My Favorites</Header>
-                    </Headers>
-                    <Sections>
-                    <Section>
-                        {myPosts.map((post, index) => (
-                        <Post key={post._id} onClick={() => handlePostClick(post.index)}>
-                            <PostImageContainer>
-                                <PostImage src={post.photoUrl}/>
-                            </PostImageContainer>
-                            <PostData>
-                                <PostTitle>{post.title}</PostTitle>
-                                <PostAuthor>Me</PostAuthor>
-                            </PostData>
-                        </Post>
-                        ))}
-                    </Section>
-                    <Section>
-                        {favorites.map((post, index) => (
-                        <Post key={post.post._id} onClick={() => handlePostClick(post.index)}>
-                            <PostImageContainer>
-                                <PostImage src={post.post.photoUrl}/>
-                            </PostImageContainer>
-                            <PostData>
-                                <PostTitle>{post.post.title}</PostTitle>
-                                <PostAuthor>{post.post.author}</PostAuthor>
-                            </PostData>
-                        </Post>
-                        ))}
-                    </Section>
-                    </Sections>
-                </Posts>
-            </Containter>
-        </>
-    )
-}
-
-export default Profile;
+const HiddenFileInput = styled.input`
+    display: none;
+`;
