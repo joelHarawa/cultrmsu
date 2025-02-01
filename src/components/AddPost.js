@@ -157,7 +157,7 @@ const Button = styled.button`
 
 const AddPost = () => {
     const navigate = useNavigate();
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';
     const {admin} = useContext(AuthContext);
     const [inputs, setInputs] = useState({
         title: "",

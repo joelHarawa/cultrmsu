@@ -24,7 +24,7 @@ const Login = () => {
     const [serverError, setServerError] = useState("");
     const [emailError, setEmailError] = useState(false);
     const [passwordError, setPassowrdError] = useState(false);
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';;
     const {login} = useContext(AuthContext);
     const navigate = useNavigate();
 

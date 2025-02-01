@@ -147,7 +147,7 @@ const Submit = styled.div`
 
 const EditIssues = () => {
     const navigate = useNavigate();
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';
     const [photo, setPhoto] = useState("");
     const [inputs, setInputs ] = useState({
         edition: "",

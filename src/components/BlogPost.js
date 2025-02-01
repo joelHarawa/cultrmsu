@@ -30,7 +30,7 @@ const BlogPost = () => {
     /* Need to make functions to get the current post and functions to
        get the next post 
     */
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';
     const { id } = useParams();
     const [index, setIndex] = useState(id);
     const [posts, setPosts] = useState([]);

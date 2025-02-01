@@ -117,7 +117,7 @@ const SignUpAdmin = () => {
     const [passwordError, setPassowrdError] = useState(false);
     const [nameError, setNameError] = useState(false);
     const [photos, setPhotos] = useState("");
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';;
 
     const [inputs, setInputs] = useState({
         firstName: "",

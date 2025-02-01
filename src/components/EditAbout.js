@@ -143,7 +143,7 @@ const ImagePreview = styled.img`
 
 
 const EditAbout = () => {
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';
     const [about, setAbout] = useState([]);
     const [photo, setPhoto] = useState("");
     const [body, setBody] = useState("");

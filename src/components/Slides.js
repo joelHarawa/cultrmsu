@@ -45,7 +45,7 @@ const Button = styled.button`
 const Slides = () => {
     const [slides, setSlides] = useState([]);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';
 
     useEffect(() => {
         const getSlides = async () => {

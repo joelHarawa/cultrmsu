@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 
 const BlogPosts = () => {
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';
     const [posts, setPosts] = useState([]);
     const navigate = useNavigate();
     useEffect(()=> {

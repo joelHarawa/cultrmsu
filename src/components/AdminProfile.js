@@ -12,7 +12,7 @@ import { AuthContext } from "../context/AuthContext";
 import Loading from "./Loading";
 
 const AdminProfile = () => {
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';
     const {admin, getAdminProfile} = useContext(AuthContext);
     const navigate = useNavigate();
     const [profilePicture, setProfilePicture] = useState("");

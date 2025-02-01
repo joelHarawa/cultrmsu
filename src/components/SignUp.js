@@ -152,7 +152,7 @@ const Button = styled.button`
 
 // Login component, user enters credentials and submits to be verified
 const Login = () => {
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';
     const [photoLeft, setPhotoLeft] = useState("");
     const [photoRight, setPhotoRight] = useState("");
     const {admin} = useContext(AuthContext);

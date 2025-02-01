@@ -99,7 +99,7 @@ const Button = styled.button`
 `;
 
 const Slides = () => {
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';
     const [slides, setSlides] = useState([]);
     const [photo, setPhoto] = useState("");
     const navigate = useNavigate();

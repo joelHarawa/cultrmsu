@@ -94,7 +94,7 @@ const ImagePreview = styled.img`
 `;
 
 const NewComponent = () => {
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';
     const [title, setTitle] = useState("");
     const [body, setBody] = useState("");
     const [date, setDate] = useState("");

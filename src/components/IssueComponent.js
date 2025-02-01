@@ -12,7 +12,7 @@ import {useParams} from "react-router-dom";
 import Loading from "./Loading";
 
 const IssueComponent = () => {
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';
     const [issues, setIssues] = useState([]);
 
     const handleClick = (pdfUrl) => {

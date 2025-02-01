@@ -45,7 +45,7 @@ const Headline = styled(Link)`
 `;
 
 const HomePosts = () => {
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';
     const [posts, setPosts] = useState([]);
 
     useEffect(() => {

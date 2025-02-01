@@ -12,7 +12,7 @@ import axios from "axios";
 import Loading from "./Loading";
 
 const AboutComponent = () => {
-    const apiUrl = 'https://18.219.147.241';
+    const apiUrl = 'https://api.cultrmagazine.com';
     const [about, setAbout] = useState([]);
 
     // Get the content to display from the backend 
